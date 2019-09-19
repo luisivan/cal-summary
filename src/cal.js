@@ -1,6 +1,7 @@
 const { google } = require('googleapis')
 
 const CalendarAuth = require('./auth')
+const CalendarTime = require('./time')
 
 class Calendar {
   static async authorize() {
@@ -16,13 +17,20 @@ class Calendar {
   async listEvents() {
     const res = await this.calendar.events.list({
       calendarId: 'primary',
-      timeMin: (new Date()).toISOString(),
+      timeMin: (CalendarTime.getWeekMonday()).toISOString(),
+      timeMax: (CalendarTime.getWeekSunday()).toISOString(),
       singleEvents: true,
       orderBy: 'startTime',
     })
     const events = res.data.items
 
-    console.log(events)
+    events.filter((event) => {
+      const matches = event.summary.match(/\[(.*?)\]/)
+      if (matches) {
+        const tag = matches[1]
+        console.log(tag)
+      }
+    })
 
     if (events.length) {
       console.log('Upcoming 10 events:')
