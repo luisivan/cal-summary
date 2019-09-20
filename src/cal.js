@@ -24,23 +24,17 @@ class Calendar {
     })
     const events = res.data.items
 
-    events.filter((event) => {
+    const taggedEvents = events.filter((event) => {
       const matches = event.summary.match(/\[(.*?)\]/)
-      if (matches) {
-        const tag = matches[1]
-        console.log(tag)
+      if (matches || event.attendees) {
+        event.tag = (matches) ? matches[1] : "meetings"
+        event.start = new Date(event.start.dateTime)
+        event.end = new Date(event.end.dateTime)
+        return true
       }
     })
 
-    if (events.length) {
-      console.log('Upcoming 10 events:')
-      events.map((event, i) => {
-        const start = event.start.dateTime || event.start.date
-        console.log(`${start} - ${event.summary}`)
-      })
-    } else {
-      console.log('No upcoming events found.')
-    }
+    return taggedEvents
   }
 }
 

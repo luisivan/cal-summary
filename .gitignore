@@ -1,4 +1,3 @@
 node_modules
 *-lock.*
-credentials.json
-token.json
+vars
