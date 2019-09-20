@@ -1,6 +1,7 @@
 const Calendar = require('./src/cal')
 const Allocation = require('./src/allocation')
 const Stats = require('./src/stats')
+const Formatter = require('./src/formatter')
 
 const init = async function () {
   const auth = await Calendar.authorize()
@@ -9,7 +10,8 @@ const init = async function () {
   const allocation = new Allocation()
   events.map((event) => allocation.add(event))
   const stats = new Stats(allocation, events)
-  console.log(stats.results)
+  const formatter = new Formatter(stats.results)
+  console.log(formatter.output)
 }
 
 init()
